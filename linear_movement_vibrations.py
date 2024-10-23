@@ -9,7 +9,7 @@
 import datetime
 
 import matplotlib
-
+import csv
 import numpy as np
 import os
 from matplotlib import pyplot as plt
@@ -148,6 +148,9 @@ class LinearMovementVibrationsTest:
             os.makedirs(self.out_directory)
         outfile = self._get_outfile_name(self.out_directory, "relative_power")
         self._plot_relative_power(powers, outfile, axis, gcmd)
+        #TODO add export csv function
+        outfile = self._get_outfile_name(self.out_directory, "relative_power_csv")
+        self._export_csv_data(powers, outfile, axis, gcmd)
         outfile = self._get_outfile_name(self.out_directory, "peak_frequencies")
         outfilelog = self._get_outfile_name(self.out_directory, "peak_frequencies_logscale")
         rotation_dist, step_distance = self._get_step_distance(axis, self.stepper_configs)
@@ -422,7 +425,7 @@ class LinearMovementVibrationsTest:
 
         for velocity_sample in data:
             x = velocity_sample[1]
-            y = velocity_sample[2]
+            y = velocity_sample[2] #velocity
             z = velocity_sample[0]
             ax.plot(x, y, zs=z, zdir='y')
         ax.set_xlabel("f in Hz")
@@ -431,8 +434,21 @@ class LinearMovementVibrationsTest:
         plt.savefig(outfile)
         gcmd.respond_info("output written to {}".format(outfile))
         plt.close('all')
-            
 
+    @staticmethod
+    def _export_csv_data(data, outfile, axis, gcmd):
+        with open(outfile, 'w', newline = '') as csv_file:
+            # export relative power
+            keys = ['velocity', 'relative_power', 'axis']
+            write = csv.writer(csv_file, delimiter=',')
+
+            write.writerow(keys)
+            velocity = data[:, 0]
+            relative_power = data[:, 1]
+            write.writerows([velocity, relative_power,  axis])
+
+        gcmd.respond_info("output written to {}".format(outfile))
+            
 
 def load_config(config):
     return LinearMovementVibrationsTest(config)
