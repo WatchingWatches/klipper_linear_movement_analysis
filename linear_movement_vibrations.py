@@ -377,6 +377,24 @@ class LinearMovementVibrationsTest:
         gcmd.respond_info("output written to {}".format(outfile))
         plt.close('all')
 
+
+    @staticmethod
+    def _export_csv_data(data, outfile, axis, gcmd):
+        data = np.array(data)
+        with open(outfile, 'w', newline = '') as csv_file:
+            # export relative power
+            keys = ['velocity', 'relative_power', 'axis']
+            write = csv.writer(csv_file, delimiter=',')
+
+            write.writerow(keys)
+            velocity = data[:, 0]#error
+            relative_power = data[:, 1]
+            for i in range(len(velocity)):
+                write.writerow([velocity[i], relative_power[i],  axis])
+
+        gcmd.respond_info("output written to {}".format(outfile))
+
+
     @staticmethod
     def _plot_peak_frequencies(data, outfile, outfilelog, axis, gcmd, d=None, step_distance=None,
                                rotation_distance=None, f_max=200):
@@ -435,21 +453,6 @@ class LinearMovementVibrationsTest:
         gcmd.respond_info("output written to {}".format(outfile))
         plt.close('all')
 
-    @staticmethod
-    def _export_csv_data(data, outfile, axis, gcmd):
-        with open(outfile, 'w', newline = '') as csv_file:
-            # export relative power
-            keys = ['velocity', 'relative_power', 'axis']
-            write = csv.writer(csv_file, delimiter=',')
-
-            write.writerow(keys)
-            velocity = data[:, 0]
-            relative_power = data[:, 1]
-            for i in range(len(velocity)):
-                write.writerow([velocity[i], relative_power[i],  axis])
-
-        gcmd.respond_info("output written to {}".format(outfile))
-            
 
 def load_config(config):
     return LinearMovementVibrationsTest(config)
