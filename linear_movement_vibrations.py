@@ -445,7 +445,8 @@ class LinearMovementVibrationsTest:
             write.writerow(keys)
             velocity = data[:, 0]
             relative_power = data[:, 1]
-            write.writerows([velocity, relative_power,  axis])
+            for i in range(len(velocity)):
+                write.writerow([velocity[i], relative_power[i],  axis])
 
         gcmd.respond_info("output written to {}".format(outfile))
             
