@@ -149,7 +149,7 @@ class LinearMovementVibrationsTest:
         outfile = self._get_outfile_name(self.out_directory, "relative_power")
         self._plot_relative_power(powers, outfile, axis, gcmd)
         #TODO add export csv function
-        outfile = self._get_outfile_name(self.out_directory, "relative_power_csv")
+        outfile = self._get_outfile_name(self.out_directory, "relative_power_csv", filetype='.csv')
         self._export_csv_data(powers, outfile, axis, gcmd)
         outfile = self._get_outfile_name(self.out_directory, "peak_frequencies")
         outfilelog = self._get_outfile_name(self.out_directory, "peak_frequencies_logscale")
@@ -314,8 +314,8 @@ class LinearMovementVibrationsTest:
         return axis
 
     @staticmethod
-    def _get_outfile_name(directory, filename):
-        return directory + filename + datetime.datetime.today().isoformat() + ".png"
+    def _get_outfile_name(directory, filename, filetype: str = ".png"):
+        return directory + filename + datetime.datetime.today().isoformat() + filetype
 
     def connect(self):
         self.toolhead = self.printer.lookup_object('toolhead')
